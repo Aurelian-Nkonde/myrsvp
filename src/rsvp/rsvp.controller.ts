@@ -1,15 +1,15 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Next, HttpStatus, Put } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Next, HttpStatus, Put, UseGuards } from '@nestjs/common';
 import { RsvpService } from './rsvp.service';
-import { CreateRsvpDto } from './dto/create-rsvp.dto';
-import { UpdateRsvpDto } from './dto/update-rsvp.dto';
 import { RsvpEntity } from './entities/rsvp.entity';
 import { Request, Response } from 'express';
+import { AuthGuard } from 'src/auth/constants/authGuard';
 
 @Controller('rsvp')
 export class RsvpController {
   constructor(private readonly rsvpService: RsvpService) { }
 
   @Get()
+  @UseGuards(AuthGuard)
   async getAllRsvps(@Req() request: Request, @Res() response: Response, @Next() next): Promise<void> {
     try {
       const res = await this.rsvpService.getAllRsvps();
@@ -21,6 +21,7 @@ export class RsvpController {
   }
 
   @Get('/:id')
+  @UseGuards(AuthGuard)
   async getRsvp(@Req() request: Request, @Res() response: Response, @Next() next): Promise<void> {
     const { id } = request.params;
     try {
@@ -33,6 +34,7 @@ export class RsvpController {
   }
 
   @Post()
+  @UseGuards(AuthGuard)
   async createRvp(@Req() request: Request, @Res() response: Response, @Next() next, @Body() rsvp: RsvpEntity): Promise<void> {
     try {
       const res = await this.rsvpService.createRsvp(rsvp);
@@ -44,6 +46,7 @@ export class RsvpController {
   }
 
   @Put('update/:id')
+  @UseGuards(AuthGuard)
   async updateRsvp(@Req() request: Request, @Res() response: Response, @Next() next): Promise<void> {
     const { id } = request.params;
     const { data } = request.body;
@@ -57,6 +60,7 @@ export class RsvpController {
   }
 
   @Delete('delete/:id')
+  @UseGuards(AuthGuard)
   async deleteRsvp(@Req() request: Request, @Res() response: Response, @Next() next): Promise<void> {
     const { id } = request.params;
     try {
@@ -69,6 +73,7 @@ export class RsvpController {
   }
 
   @Put('accept/:id')
+  @UseGuards(AuthGuard)
   async acceptRsvp(@Req() request: Request, @Res() response: Response, @Next() next): Promise<void> {
     const { id } = request.params;
     try {
@@ -81,6 +86,7 @@ export class RsvpController {
   }
 
   @Put('decline/:id')
+  @UseGuards(AuthGuard)
   async declineRsvp(@Req() request: Request, @Res() response: Response, @Next() next): Promise<void> {
     const { id } = request.params;
     try {

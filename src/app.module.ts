@@ -8,6 +8,8 @@ import { ProfileModule } from './profile/profile.module';
 import { Profile } from './profile/profile.model';
 import { Rsvp } from './rsvp/rsvp.model';
 import { User } from './user/user.model';
+import { NotificationModule } from './notification/notification.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -25,6 +27,8 @@ import { User } from './user/user.model';
     RsvpModule,
     UserModule,
     ProfileModule,
+    NotificationModule,
+    AuthModule,
 
   ],
   controllers: [AppController],
