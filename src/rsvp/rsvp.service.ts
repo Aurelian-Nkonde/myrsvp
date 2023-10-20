@@ -4,10 +4,16 @@ import { RsvpEntity } from './entities/rsvp.entity';
 import { NotFoundError } from 'rxjs';
 import ShortUniqueId from 'short-unique-id';
 import { GenerateRsvp } from 'src/utils/generateRsvpId';
+import { NotificationService } from 'src/notification/notification.service';
+import { NotificationEntity } from 'src/notification/entities/notification.entity';
+import { NotificationTypesEnum } from 'src/notification/enums/notification_types';
 
 @Injectable()
 export class RsvpService {
-  constructor(private readonly rsvpRepository: RsvpRepository) { }
+  constructor(
+    private readonly rsvpRepository: RsvpRepository,
+    private readonly notificationService: NotificationService
+  ) { }
 
   async getAllRsvps(): Promise<RsvpEntity[]> {
     const allRsvps = await this.rsvpRepository.findAll();
@@ -50,14 +56,21 @@ export class RsvpService {
         }
         console.log(updatedRsvp)
         let created = await this.rsvpRepository.create(updatedRsvp);
+        let data: NotificationEntity = {
+          userId: created.userId,
+          message: 'The RSVP has been sent!',
+          isRead: false,
+          notificationType: NotificationTypesEnum.RSVP_IS_SENT
+        }
+        await this.notificationService.createNotification(data)
         return created
       } else {
         console.error('Same Rsvp from same user exists');
-        throw new NotFoundError('Same rsvp from same user exist');
+        throw new NotFoundException('Same rsvp from same user exist');
       }
     } else {
       console.error('Error getting all Rsvps');
-      throw new NotFoundError('All rsvp are not found')
+      throw new NotFoundException('All rsvp are not found')
     }
   }
 

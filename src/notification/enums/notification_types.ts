@@ -1,0 +1,5 @@
+export enum NotificationTypesEnum {
+    RSVP_IS_SENT = 'RSVP_IS_SENT',
+    RSVP_IS_ACCEPTED = 'RSVP_IS_ACCEPTED',
+    RSVP_IS_DECLINED = 'RSVP_IS_DECLINED'
+}

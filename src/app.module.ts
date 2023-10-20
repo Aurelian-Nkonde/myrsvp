@@ -10,6 +10,7 @@ import { Rsvp } from './rsvp/rsvp.model';
 import { User } from './user/user.model';
 import { NotificationModule } from './notification/notification.module';
 import { AuthModule } from './auth/auth.module';
+import { Notification } from './notification/notification.model';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { AuthModule } from './auth/auth.module';
       database: 'future',
       autoLoadModels: true,
       synchronize: true,
-      models: [Profile, Rsvp, User],
+      models: [Profile, Rsvp, User, Notification],
     }),
     RsvpModule,
     UserModule,
