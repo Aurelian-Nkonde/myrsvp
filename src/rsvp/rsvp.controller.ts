@@ -36,6 +36,7 @@ export class RsvpController {
   @Post()
   @UseGuards(AuthGuard)
   async createRvp(@Req() request: Request, @Res() response: Response, @Next() next, @Body() rsvp: RsvpEntity): Promise<void> {
+    const { userId } = request.params;
     try {
       const res = await this.rsvpService.createRsvp(rsvp);
       response.status(HttpStatus.OK).json(res);

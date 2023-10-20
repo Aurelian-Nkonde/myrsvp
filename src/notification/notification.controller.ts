@@ -1,34 +1,33 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req, Res, Next, HttpStatus } from '@nestjs/common';
 import { NotificationService } from './notification.service';
-import { CreateNotificationDto } from './dto/create-notification.dto';
-import { UpdateNotificationDto } from './dto/update-notification.dto';
+import { Request, Response } from 'express';
 
 @Controller('notification')
 export class NotificationController {
-  constructor(private readonly notificationService: NotificationService) {}
+  constructor(private readonly notificationService: NotificationService) { }
 
-  @Post()
-  create(@Body() createNotificationDto: CreateNotificationDto) {
-    return this.notificationService.create(createNotificationDto);
+  @Get('/:userId')
+  async getAllNotifications(@Req() request: Request, @Res() response: Response, @Next() next): Promise<void> {
+    const { userId } = request.params;
+    try {
+      const res = await this.notificationService.getNotifications(userId)
+      response.status(HttpStatus.OK).json(res)
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
   }
 
-  @Get()
-  findAll() {
-    return this.notificationService.findAll();
+  @Get('/:useId/:id')
+  async readNotification(@Req() request: Request, @Res() response: Response, @Next() next): Promise<void> {
+    const {userId, id} = request.params;
+    try {
+      const res = await this.notificationService.readNotification(id, userId);
+      response.status(HttpStatus.OK).json(res)
+    } catch (error) {
+      console.error(error);
+      next(error);
+    }
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.notificationService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateNotificationDto: UpdateNotificationDto) {
-    return this.notificationService.update(+id, updateNotificationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.notificationService.remove(+id);
-  }
 }
